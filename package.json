@@ -1,0 +1,44 @@
+{
+  "name": "paysera-http-client-common",
+  "version": "0.0.4",
+  "description": "Base client for usage in generated code packages.",
+  "main": "dist/lib.js",
+  "scripts": {
+    "serve": "node config/express.js",
+    "lint": "eslint -c config/eslint.json src/",
+    "build": "webpack --config config/webpack.js",
+    "watch": "webpack --config config/webpack.js --progress --watch"
+  },
+  "repository": {
+    "type": "git",
+    "url": "ssh://vcs@phabricator.dev.lan/diffusion/385/js-lib-http-client-common.git"
+  },
+  "author": "Paysera",
+  "license": "ISC",
+  "dependencies": {
+    "axios": "^0.16.2"
+  },
+  "devDependencies": {
+    "babel-core": "^6.23.1",
+    "babel-loader": "^6.3.2",
+    "babel-plugin-transform-runtime": "^6.23.0",
+    "babel-polyfill": "^6.23.0",
+    "babel-preset-es2015": "^6.22.0",
+    "babel-preset-stage-0": "^6.24.1",
+    "eslint": "^3.16.1",
+    "eslint-config-airbnb": "^14.1.0",
+    "eslint-plugin-import": "^2.2.0",
+    "eslint-plugin-jsx-a11y": "^4.0.0",
+    "eslint-plugin-react": "^6.10.0",
+    "express": "^4.15.4",
+    "ng-annotate-loader": "^0.2.0",
+    "path": "^0.12.7",
+    "transform-runtime": "0.0.0",
+    "webpack": "^2.2.1"
+  },
+  "babel": {
+    "presets": [
+      "es2015"
+    ]
+  }
+}
