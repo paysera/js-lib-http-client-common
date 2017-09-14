@@ -19,19 +19,19 @@ class Filter extends Entity {
     }
 
     setOrderBy(orderBy) {
-        this.set('orderBy', orderBy);
+        this.set('order_by', orderBy);
     }
 
     getOrderBy() {
-        return this.get('orderBy');
+        return this.get('order_by');
     }
 
     setOrderDirection(orderDirection) {
-        this.set('orderDirection', orderDirection);
+        this.set('order_direction', orderDirection);
     }
 
     getOrderDirection() {
-        return this.get('orderDirection');
+        return this.get('order_direction');
     }
 }
 

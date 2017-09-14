@@ -444,22 +444,22 @@ var Filter = function (_Entity) {
     }, {
         key: 'setOrderBy',
         value: function setOrderBy(orderBy) {
-            this.set('orderBy', orderBy);
+            this.set('order_by', orderBy);
         }
     }, {
         key: 'getOrderBy',
         value: function getOrderBy() {
-            return this.get('orderBy');
+            return this.get('order_by');
         }
     }, {
         key: 'setOrderDirection',
         value: function setOrderDirection(orderDirection) {
-            this.set('orderDirection', orderDirection);
+            this.set('order_direction', orderDirection);
         }
     }, {
         key: 'getOrderDirection',
         value: function getOrderDirection() {
-            return this.get('orderDirection');
+            return this.get('order_direction');
         }
     }]);
 
