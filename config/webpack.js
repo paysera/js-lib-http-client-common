@@ -45,7 +45,7 @@ module.exports = {
     context: path.resolve(__dirname, '../'),
     target: 'web',
     externals: {
-        angular: 'angular'
+        axios: 'axios'
     },
     plugins: [
         new webpack.optimize.UglifyJsPlugin({
