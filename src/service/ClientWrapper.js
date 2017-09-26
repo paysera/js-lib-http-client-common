@@ -8,6 +8,8 @@ class ClientWrapper {
         this.client = client;
         this.options = options;
         this.token = null;
+
+        this.AUTH_HTTP_CODES = [401, 403];
     }
 
     /**
@@ -76,7 +78,7 @@ class ClientWrapper {
             }).catch((error) => {
                 if (
                     error.response
-                    && error.response.status === 403
+                    && this.AUTH_HTTP_CODES.indexOf(error.response.status) !== -1
                     && typeof this.options.refreshTokenProvider !== 'undefined'
                     && token !== null
                     && repeat

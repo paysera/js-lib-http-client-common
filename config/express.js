@@ -8,7 +8,7 @@ app.get('/accounts', function (req, res) {
     if (req.header('Authorization') !== 'Bearer valid-token') {
         console.log('Got auth header: ' + req.header('Authorization'));
 
-        res.status(403);
+        res.status(401);
         res.setHeader('Content-Type', 'application/json');
         res.send(JSON.stringify({'error': 'invalid token'}));
         return;

@@ -278,6 +278,8 @@ var ClientWrapper = function () {
         this.client = client;
         this.options = options;
         this.token = null;
+
+        this.AUTH_HTTP_CODES = [401, 403];
     }
 
     /**
@@ -368,7 +370,7 @@ var ClientWrapper = function () {
                 }).then(function (result) {
                     return result.data;
                 }).catch(function (error) {
-                    if (error.response && error.response.status === 403 && typeof _this2.options.refreshTokenProvider !== 'undefined' && token !== null && repeat) {
+                    if (error.response && _this2.AUTH_HTTP_CODES.indexOf(error.response.status) !== -1 && typeof _this2.options.refreshTokenProvider !== 'undefined' && token !== null && repeat) {
                         return _this2.options.refreshTokenProvider(token.getScope()).then(function (refreshedToken) {
                             _this2.setToken(refreshedToken);
                             return _this2.performRequest(request, false);
