@@ -1,3 +1,5 @@
+import Q from 'q';
+
 class ClientWrapper {
 
     /**
@@ -41,7 +43,7 @@ class ClientWrapper {
             const provider = this.getTokenProvider();
 
             if (provider === null) {
-                return Promise.resolve(null);
+                return Q.when(null);
             }
 
             return provider.getToken().then((token) => {
@@ -50,7 +52,7 @@ class ClientWrapper {
             });
         }
 
-        return Promise.resolve(this.token);
+        return Q.when(this.token);
     }
 
     /**

@@ -1,6 +1,6 @@
 {
   "name": "paysera-http-client-common",
-  "version": "0.0.7",
+  "version": "0.0.8",
   "description": "Base client for usage in generated code packages.",
   "main": "dist/lib.js",
   "scripts": {
@@ -11,12 +11,13 @@
   },
   "repository": {
     "type": "git",
-    "url": "ssh://vcs@phabricator.dev.lan/diffusion/385/js-lib-http-client-common.git"
+    "url": "https://github.com/paysera/js-lib-http-client-common.git"
   },
   "author": "Paysera",
   "license": "ISC",
   "dependencies": {
-    "axios": "^0.16.2"
+    "axios": "^0.16.2",
+    "q": "^1.5.0"
   },
   "devDependencies": {
     "babel-core": "^6.23.1",
