@@ -1,3 +1,5 @@
+import Q from 'q';
+
 class TokenProvider {
 
     /**
@@ -13,7 +15,7 @@ class TokenProvider {
      * @returns {Promise.<null>}
      */
     getToken() {
-        return Promise.resolve(this.provider !== null ? this.provider(this.scope) : null);
+        return Q.when(typeof this.provider === 'function' ? this.provider(this.scope) : null);
     }
 }
 

@@ -15,6 +15,7 @@ Include files:
 #### Dependencies
 * [`axios`](https://github.com/mzabriskie/axios)
 * [`babel-polyfill`](https://github.com/babel/babel/tree/master/packages/babel-polyfill)
+* [`q`](https://github.com/kriskowal/q)
 
 ## Demo run
 ```shell
