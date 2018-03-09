@@ -1,6 +1,6 @@
 {
   "name": "paysera-http-client-common",
-  "version": "0.0.8",
+  "version": "0.1.0",
   "description": "Base client for usage in generated code packages.",
   "main": "dist/lib.js",
   "scripts": {
@@ -16,7 +16,7 @@
   "author": "Paysera",
   "license": "ISC",
   "dependencies": {
-    "axios": "^0.16.2",
+    "axios": "^0.18.0",
     "q": "^1.5.0"
   },
   "devDependencies": {
