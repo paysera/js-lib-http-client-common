@@ -20,7 +20,10 @@ class Result extends Entity {
      * @returns {Array.|null}
      */
     getItems() {
-        return typeof this.data[this.dataKey] !== 'undefined' ? this.data[this.dataKey] : [];
+        return typeof this.data[this.dataKey] !== 'undefined'
+            ? this.data[this.dataKey].map(item => this.createItem(item))
+            : []
+            ;
     }
 
     /**
@@ -34,21 +37,30 @@ class Result extends Entity {
      * @returns {int|null}
      */
     getTotal() {
-        return typeof this.metadata.total !== 'undefined' ? this.metadata.total : null;
+        if (this.getMetadata() !== null) {
+            return typeof this.getMetadata().total !== 'undefined' ? this.getMetadata().total : null;
+        }
+        return null;
     }
 
     /**
      * @returns {int|null}
      */
     getOffset() {
-        return typeof this.metadata.offset !== 'undefined' ? this.metadata.offset : null;
+        if (this.getMetadata() !== null) {
+            return typeof this.getMetadata().offset !== 'undefined' ? this.getMetadata().offset : null;
+        }
+        return null;
     }
 
     /**
      * @returns {int|null}
      */
     getLimit() {
-        return typeof this.metadata.limit !== 'undefined' ? this.metadata.limit : null;
+        if (this.getMetadata() !== null) {
+            return typeof this.getMetadata().limit !== 'undefined' ? this.getMetadata().limit : null;
+        }
+        return null;
     }
 
     /**
