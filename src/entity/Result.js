@@ -13,7 +13,7 @@ class Result extends Entity {
     }
 
     * [Symbol.iterator]() {
-        return yield* this.getItems().map(item => this.createItem(item));
+        return yield* this.getItems();
     }
 
     /**
