@@ -3100,15 +3100,11 @@ var Result = function (_Entity) {
     _createClass(Result, [{
         key: Symbol.iterator,
         value: regeneratorRuntime.mark(function value() {
-            var _this2 = this;
-
             return regeneratorRuntime.wrap(function value$(_context) {
                 while (1) {
                     switch (_context.prev = _context.next) {
                         case 0:
-                            return _context.delegateYield(this.getItems().map(function (item) {
-                                return _this2.createItem(item);
-                            }), 't0', 1);
+                            return _context.delegateYield(this.getItems(), 't0', 1);
 
                         case 1:
                             return _context.abrupt('return', _context.t0);
@@ -3128,7 +3124,11 @@ var Result = function (_Entity) {
     }, {
         key: 'getItems',
         value: function getItems() {
-            return typeof this.data[this.dataKey] !== 'undefined' ? this.data[this.dataKey] : [];
+            var _this2 = this;
+
+            return typeof this.data[this.dataKey] !== 'undefined' ? this.data[this.dataKey].map(function (item) {
+                return _this2.createItem(item);
+            }) : [];
         }
 
         /**
@@ -3148,7 +3148,10 @@ var Result = function (_Entity) {
     }, {
         key: 'getTotal',
         value: function getTotal() {
-            return typeof this.metadata.total !== 'undefined' ? this.metadata.total : null;
+            if (this.getMetadata() !== null) {
+                return typeof this.getMetadata().total !== 'undefined' ? this.getMetadata().total : null;
+            }
+            return null;
         }
 
         /**
@@ -3158,7 +3161,10 @@ var Result = function (_Entity) {
     }, {
         key: 'getOffset',
         value: function getOffset() {
-            return typeof this.metadata.offset !== 'undefined' ? this.metadata.offset : null;
+            if (this.getMetadata() !== null) {
+                return typeof this.getMetadata().offset !== 'undefined' ? this.getMetadata().offset : null;
+            }
+            return null;
         }
 
         /**
@@ -3168,7 +3174,10 @@ var Result = function (_Entity) {
     }, {
         key: 'getLimit',
         value: function getLimit() {
-            return typeof this.metadata.limit !== 'undefined' ? this.metadata.limit : null;
+            if (this.getMetadata() !== null) {
+                return typeof this.getMetadata().limit !== 'undefined' ? this.getMetadata().limit : null;
+            }
+            return null;
         }
 
         /**
