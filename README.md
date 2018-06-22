@@ -9,8 +9,7 @@ npm i @paysera/http-client-common
 ```
 Include files:
 ```html
-<script type="text/javascript" src="dist/babel.polyfill.js"></script>
-<script type="text/javascript" src="dist/lib.js"></script>
+<script type="text/javascript" src="dist/main.js"></script>
 ```
 
 #### Dependencies
@@ -23,9 +22,9 @@ Include files:
 ```js
 import { clientFactory, requestFactory } from '@paysera/http-client-common';
 
-const client = clientFactory(
-    'https://demo.com', // base url
-);
+const client = clientFactory({
+    baseURL: 'https://demo.com',
+});
 
 client.performRequest(requestFactory('get', '/list'));
 ```
@@ -41,9 +40,9 @@ import {
     Scope,
 } from '@paysera/http-client-common';
 
-const client = clientFactory(
-    'https://demo.com', // base url
-    [
+const client = clientFactory({
+    baseURL: 'https://demo.com', // base url
+    middleware: [
         new JWTAuthenticationMiddleware(
             new Scope('scope:a'),
             new SessionStorageTokenProvider(
@@ -54,7 +53,7 @@ const client = clientFactory(
             ),
         ),
     ],
-);
+});
 
 client.performRequest(requestFactory('get', '/list'));
 ```
