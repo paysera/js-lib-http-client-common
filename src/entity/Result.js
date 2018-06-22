@@ -1,7 +1,6 @@
 import Entity from './Entity';
 
 class Result extends Entity {
-
     /**
      * @param {object} data
      * @param {string} dataKey
@@ -22,8 +21,7 @@ class Result extends Entity {
     getItems() {
         return typeof this.data[this.dataKey] !== 'undefined'
             ? this.data[this.dataKey].map(item => this.createItem(item))
-            : []
-        ;
+            : [];
     }
 
     /**
@@ -65,6 +63,7 @@ class Result extends Entity {
 
     /**
      * @param {object} data
+     *
      * @returns {Entity}
      */
     createItem(data) {

@@ -1,0 +1,7 @@
+{
+    "extends": "@paysera",
+    "env": {
+        "jest": true,
+        "es6": true
+    }
+}

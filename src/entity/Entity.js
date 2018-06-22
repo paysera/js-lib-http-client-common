@@ -1,5 +1,4 @@
 class Entity {
-
     /**
      * @param {object} data
      */

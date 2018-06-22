@@ -1,5 +1,4 @@
 class Scope {
-
     /**
      * @param {string} value
      */

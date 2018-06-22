@@ -1,5 +1,4 @@
 class Token {
-
     /**
      * @param {Scope} scope
      * @param {string} token

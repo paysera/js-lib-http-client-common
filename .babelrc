@@ -1,0 +1,31 @@
+{
+    "presets": [
+        ["env", {
+            "modules": false,
+            "targets": {
+                "node": "current",
+                "browsers": [
+                    "last 10 versions",
+                    "ie >= 9"
+                ]
+            }
+        }]
+    ],
+    "plugins": [
+        ["babel-plugin-transform-builtin-extend", {
+            "globals": ["Error"]
+        }],
+        ["babel-plugin-transform-object-rest-spread"],
+        ["transform-runtime", {
+            "helpers": false,
+            "polyfill": false,
+            "regenerator": true
+        }]
+    ],
+    "env": {
+        "test": {
+            "presets": [],
+            "plugins": ["transform-es2015-modules-commonjs"]
+        }
+    }
+}

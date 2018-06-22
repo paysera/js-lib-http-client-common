@@ -1,5 +1,4 @@
 class Request {
-
     /**
      * @param {string} method
      * @param {string} path
