@@ -1,4 +1,3 @@
-import axios from 'axios';
 import { AuthenticationError } from '../error';
 
 export default class ClientWrapper {

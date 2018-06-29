@@ -1,5 +1,5 @@
 import nock from 'nock';
-import requestFactory from '../service/requestFactory';
+import createRequest from '../service/createRequest';
 import { config, createClientWrapper } from './__utils__/factory';
 import axiosNockMock from './__utils__/axios-nock-mock';
 import { AuthenticationError } from '../error';
@@ -18,7 +18,7 @@ describe('ClientWrapper', () => {
             .get('/list')
             .reply(200, 'data');
 
-        const response = await clientWrapper.performRequest(requestFactory(
+        const response = await clientWrapper.performRequest(createRequest(
             'get',
             '/list',
         ));
@@ -37,7 +37,7 @@ describe('ClientWrapper', () => {
             .get('/list')
             .reply(200, 'data');
 
-        const response = await clientWrapper.performRequest(requestFactory(
+        const response = await clientWrapper.performRequest(createRequest(
             'get',
             '/list',
         ));
@@ -58,7 +58,7 @@ describe('ClientWrapper', () => {
             .reply(200, 'data');
 
         try {
-            await clientWrapper.performRequest(requestFactory(
+            await clientWrapper.performRequest(createRequest(
                 'get',
                 '/list',
             ));

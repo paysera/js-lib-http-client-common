@@ -1,7 +1,6 @@
 import Entity from './Entity';
 
 class Filter extends Entity {
-
     setLimit(limit) {
         this.set('limit', limit);
     }

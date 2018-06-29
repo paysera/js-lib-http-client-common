@@ -11,14 +11,14 @@ export default ({
     });
 
     if (middleware !== null) {
-        instance.interceptors.request.use((config) => {
-            config.instance = config;
-
-            return middleware.reduce(
-                async (currentConfig, currentMiddleware) => await currentMiddleware.onRequest(currentConfig),
-                config,
-            );
-        });
+        instance.interceptors.request.use(config => middleware.reduce(
+            async (currentConfig, currentMiddleware) => (
+                typeof currentMiddleware.onRequest === 'function'
+                    ? currentMiddleware.onRequest(await currentConfig)
+                    : currentConfig
+            ),
+            config,
+        ));
 
         instance.interceptors.response.use(
             response => response,
@@ -26,7 +26,9 @@ export default ({
                 throw await middleware.reduce(
                     async (currentError, currentMiddleware) => {
                         try {
-                            return await currentMiddleware.onResponseError(currentError);
+                            return typeof currentMiddleware.onResponseError === 'function'
+                                ? await currentMiddleware.onResponseError(await currentError)
+                                : currentError;
                         } catch (errorResponse) {
                             return errorResponse;
                         }

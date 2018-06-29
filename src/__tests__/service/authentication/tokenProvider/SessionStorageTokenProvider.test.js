@@ -49,7 +49,10 @@ describe('SessionStorageTokenProvider', () => {
     });
 
     test('return same token on multiple calls of createToken', async () => {
-        const createTokenActionMock = jest.fn().mockImplementation(scope => ({ scope, accessToken: config.CREATED_TOKEN }));
+        const createTokenActionMock = jest.fn().mockImplementation(scope => ({
+            scope,
+            accessToken: config.CREATED_TOKEN,
+        }));
         const tokenProvider = createSessionStorageTokenProvider(createTokenActionMock);
 
         const token = await tokenProvider.createToken(new Scope(config.SCOPE_VALUE));

@@ -1,7 +1,7 @@
 import axios from 'axios/index';
 import SessionStorageTokenProvider from '../../service/authentication/tokenProvider/SessionStorageTokenProvider';
 import Scope from '../../entity/Scope';
-import clientFactory from '../../service/clientFactory';
+import createClientMethod from '../../service/createClient';
 import JWTAuthenticationMiddleware from '../../service/authentication/JWTAuthenticationMiddleware';
 import ClientWrapper from '../../service/ClientWrapper';
 
@@ -32,7 +32,7 @@ export const storageKey = () => `__storejs_${STORAGE_NAMESPACE}_token_${STORAGE_
 export const createClient = (
     baseURL = HOST,
     middleware = [createJWTAuthenticationMiddleware()],
-) => clientFactory({ baseURL, middleware });
+) => createClientMethod({ baseURL, middleware });
 
 export const createClientWrapper = (client = axios.create({ baseURL: HOST })) => new ClientWrapper(client);
 

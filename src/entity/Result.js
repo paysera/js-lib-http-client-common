@@ -1,5 +1,6 @@
 import Entity from './Entity';
 
+/* eslint class-methods-use-this: ["error", { "exceptMethods": ["createItem"] }] */
 class Result extends Entity {
     /**
      * @param {object} data

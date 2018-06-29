@@ -13,6 +13,6 @@ export { default as JWTAuthenticationMiddleware } from './service/authentication
 
 export { default as SessionStorage } from './service/storage/SessionStorage';
 
-export { default as clientFactory } from './service/clientFactory';
+export { default as createClient } from './service/createClient';
 export { default as ClientWrapper } from './service/ClientWrapper';
-export { default as requestFactory } from './service/requestFactory';
+export { default as createRequest } from './service/createRequest';
