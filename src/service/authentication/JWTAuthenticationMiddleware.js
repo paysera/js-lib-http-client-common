@@ -16,12 +16,17 @@ export default class JWTAuthenticationMiddleware {
     async onRequest(config) {
         const token = await this.tokenProvider.createToken(this.scope);
 
+        const jwtAuthenticationConfig = typeof config.jwtAuthenticationConfig === 'undefined'
+            ? { retryCount: 0 }
+            : { ...config.jwtAuthenticationConfig };
+
         return {
             ...config,
             headers: {
                 ...config.headers || {},
                 Authorization: `Bearer ${token.getTokenValue()}`,
             },
+            jwtAuthenticationConfig,
         };
     }
 
@@ -31,9 +36,14 @@ export default class JWTAuthenticationMiddleware {
             && typeof error.response === 'object'
             && AUTH_HTTP_CODES.indexOf(error.response.status) !== -1
         ) {
-            await this.tokenProvider.refreshToken(this.scope);
+            const resendConfig = { ...error.config };
+            if (resendConfig.jwtAuthenticationConfig.retryCount < 1) {
+                resendConfig.jwtAuthenticationConfig.retryCount += 1;
 
-            throw new AuthenticationError(error);
+                await this.tokenProvider.refreshToken(this.scope);
+
+                return error.config.resendRequest(resendConfig);
+            }
         }
 
         throw error;

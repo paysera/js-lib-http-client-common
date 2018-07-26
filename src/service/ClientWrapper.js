@@ -15,25 +15,29 @@ export default class ClientWrapper {
      * @returns {Promise.<*>}
      */
     async performRequest(request, repeat = true) {
-        try {
-            const response = await this.client({
+        const response = await this.sendRequest(
+            {
                 method: request.method,
                 url: request.path,
                 data: request.body,
                 params: request.parameters,
-            });
+            },
+            repeat,
+        );
 
-            return response.data;
-        } catch (error) {
-            if (error instanceof AuthenticationError) {
-                if (!repeat) {
-                    throw error.getResponse();
-                }
+        return response.data;
+    }
 
-                return this.performRequest(request, false);
-            }
+    /**
+     * @param {object} config
+     *
+     * @returns {Promise.<*>}
+     */
+    sendRequest(config) {
+        return this.client({
+            ...config,
 
-            throw error;
-        }
+            resendRequest: (resendConfig = {}) => this.sendRequest({ ...config, ...resendConfig }),
+        });
     }
 }

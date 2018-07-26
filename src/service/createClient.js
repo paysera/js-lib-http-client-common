@@ -2,6 +2,11 @@ import axios from 'axios';
 
 import ClientWrapper from './ClientWrapper';
 
+const ERROR_MIDDLEWARE_STATUS = {
+    error: 'error',
+    response: 'response',
+};
+
 export default ({
     baseURL = null,
     middleware = null,
@@ -21,20 +26,44 @@ export default ({
         ));
 
         instance.interceptors.response.use(
-            response => response,
+            response => middleware.reduce(
+                async (currentResponse, currentMiddleware) => (
+                    typeof currentMiddleware.onResponse === 'function'
+                        ? currentMiddleware.onResponse(await currentResponse)
+                        : currentResponse
+                ),
+                response,
+            ),
             async (error) => {
-                throw await middleware.reduce(
+                const result = await middleware.reduce(
                     async (currentError, currentMiddleware) => {
                         try {
-                            return typeof currentMiddleware.onResponseError === 'function'
-                                ? await currentMiddleware.onResponseError(await currentError)
-                                : currentError;
+                            const data = typeof currentMiddleware.onResponseError === 'function'
+                                ? await currentMiddleware.onResponseError(await currentError.data)
+                                : currentError.data;
+
+                            return {
+                                type: ERROR_MIDDLEWARE_STATUS.response,
+                                data,
+                            };
                         } catch (errorResponse) {
-                            return errorResponse;
+                            return {
+                                type: ERROR_MIDDLEWARE_STATUS.error,
+                                data: errorResponse,
+                            };
                         }
                     },
-                    error,
+                    {
+                        type: ERROR_MIDDLEWARE_STATUS.error,
+                        data: error,
+                    },
                 );
+
+                if (result.type === ERROR_MIDDLEWARE_STATUS.error) {
+                    throw await result.data;
+                }
+
+                return result.data;
             },
         );
     }
