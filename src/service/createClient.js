@@ -38,13 +38,15 @@ export default ({
                 const result = await middleware.reduce(
                     async (currentError, currentMiddleware) => {
                         try {
+                            const resolvedCurrentError = await currentError;
+                            
                             const data = typeof currentMiddleware.onResponseError === 'function'
-                                ? await currentMiddleware.onResponseError(await currentError.data)
-                                : currentError.data;
+                                ? await currentMiddleware.onResponseError(await resolvedCurrentError.data)
+                                : resolvedCurrentError.data;
 
                             return {
-                                type: ERROR_MIDDLEWARE_STATUS.response,
                                 data,
+                                type: ERROR_MIDDLEWARE_STATUS.response,
                             };
                         } catch (errorResponse) {
                             return {

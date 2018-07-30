@@ -1,4 +1,3 @@
-import { AuthenticationError } from '../../../error';
 import { createSessionStorageTokenProvider, createJWTAuthenticationMiddleware, config } from '../../__utils__/factory';
 
 const createRequestConfig = () => ({
@@ -12,6 +11,9 @@ describe('JWTAuthenticationMiddleware', () => {
         const requestConfig = { ...createRequestConfig() };
         const expected = {
             ...requestConfig,
+            jwtAuthenticationConfig: {
+                retryCount: 0,
+            },
             headers: {
                 ...requestConfig.headers || {},
                 Authorization: `Bearer ${config.CREATED_TOKEN}`,
@@ -32,13 +34,21 @@ describe('JWTAuthenticationMiddleware', () => {
 
         try {
             await middleware.onResponseError({
+                config: {
+                    jwtAuthenticationConfig: {
+                        retryCount: 0,
+                    },
+                    resendRequest: () => {
+                        throw new Error('Resend error');
+                    },
+                },
                 response: {
                     status: 401,
                 },
             });
         } catch (error) {
             expect(refreshTokenActionMock).toHaveBeenCalledTimes(1);
-            expect(error).toBeInstanceOf(AuthenticationError);
+            expect(error).toBeInstanceOf(Error);
         }
     });
 

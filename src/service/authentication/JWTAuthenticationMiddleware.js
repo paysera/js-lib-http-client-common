@@ -1,5 +1,4 @@
 import Scope from '../../entity/Scope';
-import { AuthenticationError } from '../../error';
 
 const AUTH_HTTP_CODES = [401, 403];
 
