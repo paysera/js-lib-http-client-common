@@ -1,6 +1,6 @@
 {
   "name": "@paysera/http-client-common",
-  "version": "2.0.2",
+  "version": "2.1.0",
   "description": "Axios requests wrapper",
   "main": "dist/main.js",
   "scripts": {

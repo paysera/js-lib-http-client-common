@@ -1,6 +1,7 @@
 import axios from 'axios';
 
 import ClientWrapper from './ClientWrapper';
+import parseBaseUrlParameters from './parseBaseUrlParameters';
 
 const ERROR_MIDDLEWARE_STATUS = {
     error: 'error',
@@ -10,9 +11,10 @@ const ERROR_MIDDLEWARE_STATUS = {
 export default ({
     baseURL = null,
     middleware = null,
+    options = {},
 }) => {
     const instance = axios.create({
-        baseURL,
+        baseURL: parseBaseUrlParameters(baseURL, options),
     });
 
     if (middleware !== null) {

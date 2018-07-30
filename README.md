@@ -41,7 +41,7 @@ import {
 } from '@paysera/http-client-common';
 
 const client = clientFactory({
-    baseURL: 'https://demo.com', // base url
+    baseURL: 'https://{shard_id}.demo.com/{locale}', // base url with parameters
     middleware: [
         new JWTAuthenticationMiddleware(
             new Scope('scope:a'),
@@ -53,6 +53,11 @@ const client = clientFactory({
             ),
         ),
     ],
+    options: {
+        urlParameters: {
+            // list of url parameters
+        }
+    }
 });
 
 client.performRequest(requestFactory('get', '/list'));
