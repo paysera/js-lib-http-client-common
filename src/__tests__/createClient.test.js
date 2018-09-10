@@ -214,4 +214,284 @@ describe('clientFactory', () => {
 
         expect(requestMock.isDone()).toBe(true);
     });
+
+    test('first called middleware returns fulfilled promise, so second middleware will not be called', async () => {
+        const firstMiddleware = {
+            onResponseError: jest.fn().mockImplementation(error => new Promise((resolve) => {
+                setTimeout(async () => {
+                    resolve({ data: 'firstMiddleware' });
+                }, 200);
+            })),
+        };
+
+        const secondMiddleware = {
+            onResponseError: jest.fn().mockImplementation(error => error),
+        };
+
+        const client = createClient(
+            undefined,
+            [firstMiddleware, secondMiddleware],
+        );
+
+        const requestMock = nock(config.HOST)
+            .get('/list')
+            .reply(400, 'data');
+
+        const response = await client.performRequest(createRequest(
+            'get',
+            '/list',
+        ));
+
+        expect(firstMiddleware.onResponseError).toHaveBeenCalledTimes(1);
+        expect(secondMiddleware.onResponseError).toHaveBeenCalledTimes(0);
+        expect(response).toEqual('firstMiddleware');
+        expect(requestMock.isDone()).toBe(true);
+    });
+
+    test('both middleware returns rejected promise', async () => {
+        const firstMiddleware = {
+            onResponseError: jest.fn().mockImplementation(error => new Promise((resolve, reject) => {
+                setTimeout(() => {
+                    reject({
+                        ...error,
+                        response: {
+                            ...error.response,
+                            data: `${error.response.data} first`,
+                        },
+                    });
+                }, 200);
+            })),
+        };
+
+        const secondMiddleware = {
+            onResponseError: jest.fn().mockImplementation(error => new Promise((resolve, reject) => {
+                setTimeout(() => {
+                    reject({
+                        ...error,
+                        response: {
+                            ...error.response,
+                            data: `${error.response.data} second`,
+                        },
+                    });
+                }, 200);
+            })),
+        };
+
+        const client = createClient(
+            undefined,
+            [firstMiddleware, secondMiddleware],
+        );
+
+        const requestMock = nock(config.HOST)
+            .get('/list')
+            .reply(400, 'data');
+
+
+        try {
+            await client.performRequest(createRequest(
+                'get',
+                '/list',
+            ));
+        } catch (error) {
+            expect(error.response.data).toEqual('data first second');
+
+            expect(firstMiddleware.onResponseError).toHaveBeenCalledTimes(1);
+            expect(secondMiddleware.onResponseError).toHaveBeenCalledTimes(1);
+            expect(requestMock.isDone()).toBe(true);
+        }
+    });
+
+    test('onResponse middleware execution order by add sequence', async () => {
+        const firstMiddleware = {
+            onResponse: jest.fn().mockImplementation(response => new Promise((resolve) => {
+                setTimeout(() => {
+                    resolve({
+                        ...response,
+                        data: `${response.data} first`,
+                    });
+                }, 200);
+            })),
+        };
+
+        const secondMiddleware = {
+            onResponse: jest.fn().mockImplementation(response => new Promise((resolve) => {
+                setTimeout(() => {
+                    resolve({
+                        ...response,
+                        data: `${response.data} second`,
+                    });
+                }, 20);
+            })),
+        };
+
+        const thirdMiddleware = {
+            onResponse: jest.fn().mockImplementation(response => new Promise((resolve) => {
+                setTimeout(() => {
+                    resolve({
+                        ...response,
+                        data: `${response.data} third`,
+                    });
+                }, 20);
+            })),
+        };
+
+        const client = createClient(
+            undefined,
+            [firstMiddleware, secondMiddleware, thirdMiddleware],
+        );
+
+        const requestMock = nock(config.HOST)
+            .get('/list')
+            .reply(200, 'data');
+
+        const response = await client.performRequest(createRequest(
+            'get',
+            '/list',
+        ));
+
+        expect(response).toEqual('data first second third');
+
+        expect(requestMock.isDone()).toBe(true);
+    });
+
+    test('onResponseError middleware execution order by add sequence', async () => {
+        const firstMiddleware = {
+            onResponseError: jest.fn().mockImplementation(error => new Promise((resolve, reject) => {
+                setTimeout(() => {
+                    reject({
+                        ...error,
+                        response: {
+                            ...error.response,
+                            data: `${error.response.data} first`,
+                        },
+                    });
+                }, 200);
+            })),
+        };
+
+        const secondMiddleware = {
+            onResponseError: jest.fn().mockImplementation(error => new Promise((resolve, reject) => {
+                setTimeout(() => {
+                    reject({
+                        ...error,
+                        response: {
+                            ...error.response,
+                            data: `${error.response.data} second`,
+                        },
+                    });
+                }, 20);
+            })),
+        };
+
+        const thirdMiddleware = {
+            onResponseError: jest.fn().mockImplementation(error => new Promise((resolve, reject) => {
+                setTimeout(() => {
+                    reject({
+                        ...error,
+                        response: {
+                            ...error.response,
+                            data: `${error.response.data} third`,
+                        },
+                    });
+                }, 100);
+            })),
+        };
+
+        const client = createClient(
+            undefined,
+            [firstMiddleware, secondMiddleware, thirdMiddleware],
+        );
+
+        const requestMock = nock(config.HOST)
+            .get('/list')
+            .reply(400, 'data');
+
+        try {
+            await client.performRequest(createRequest(
+                'get',
+                '/list',
+            ));
+        } catch (error) {
+            expect(error.response.status).toEqual(400);
+            expect(error.response.data).toEqual('data first second third');
+
+            expect(requestMock.isDone()).toBe(true);
+        }
+    });
+
+    test('onRequest middleware execution order by add sequence', async () => {
+        const firstMiddleware = {
+            onRequest: jest.fn().mockImplementation(requestConfig => new Promise((resolve, reject) => {
+                setTimeout(() => {
+                    const headers = requestConfig.headers || {};
+                    if (typeof headers['x-middleware'] === 'undefined') {
+                        headers['x-middleware'] = '';
+                    }
+                    headers['x-middleware'] += ' first';
+
+                    resolve({
+                        ...requestConfig,
+                        headers,
+                    });
+                }, 200);
+            })),
+        };
+
+        const secondMiddleware = {
+            onRequest: jest.fn().mockImplementation(requestConfig => new Promise((resolve, reject) => {
+                setTimeout(() => {
+                    const headers = requestConfig.headers || {};
+                    if (typeof headers['x-middleware'] === 'undefined') {
+                        headers['x-middleware'] = '';
+                    }
+                    headers['x-middleware'] += ' second';
+
+                    resolve({
+                        ...requestConfig,
+                        headers,
+                    });
+                }, 20);
+            })),
+        };
+
+        const thirdMiddleware = {
+            onRequest: jest.fn().mockImplementation(requestConfig => new Promise((resolve, reject) => {
+                setTimeout(() => {
+                    const headers = requestConfig.headers || {};
+                    if (typeof headers['x-middleware'] === 'undefined') {
+                        headers['x-middleware'] = '';
+                    }
+                    headers['x-middleware'] += ' third';
+
+                    resolve({
+                        ...requestConfig,
+                        headers,
+                    });
+                }, 100);
+            })),
+        };
+
+        const client = createClient(
+            undefined,
+            [firstMiddleware, secondMiddleware, thirdMiddleware],
+        );
+
+        const requestMock = nock(config.HOST, {
+            reqheaders: { 'x-middleware': ' first second third' },
+        })
+            .get('/list')
+            .reply(400, 'data');
+
+        try {
+            await client.performRequest(createRequest(
+                'get',
+                '/list',
+            ));
+        } catch (error) {
+            expect(error.response.status).toEqual(400);
+            expect(error.response.data).toEqual('data');
+
+            expect(requestMock.isDone()).toBe(true);
+        }
+    });
 });
