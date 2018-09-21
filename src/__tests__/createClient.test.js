@@ -12,6 +12,21 @@ beforeEach(() => {
 });
 
 describe('clientFactory', () => {
+    test('test X-Requested-With header', async () => {
+        const client = createClient();
+
+        const requestMock = nock(config.HOST, { reqheaders: { 'X-Requested-With': 'XMLHttpRequest' } })
+            .get('/list')
+            .reply(200, 'data');
+
+        await client.performRequest(createRequest(
+            'get',
+            '/list',
+        ));
+
+        expect(requestMock.isDone()).toBe(true);
+    });
+
     test('makes request with jwt authorization middleware', async () => {
         const client = createClient();
 

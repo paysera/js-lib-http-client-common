@@ -13,6 +13,8 @@ export default ({
         baseURL: parseBaseUrlParameters(baseURL, options),
     });
 
+    instance.defaults.headers.common['X-Requested-With'] = 'XMLHttpRequest';
+
     if (middleware !== null) {
         useMiddlewareList(instance, middleware);
     }
