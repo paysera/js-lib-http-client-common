@@ -1,5 +1,3 @@
-import { AuthenticationError } from '../error';
-
 export default class ClientWrapper {
     /**
      * @param {axios} client

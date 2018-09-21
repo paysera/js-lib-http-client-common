@@ -1,6 +1,6 @@
 const {
-    requestFactory,
-    clientFactory,
+    createRequest,
+    createClient,
     JWTAuthenticationMiddleware,
     Scope,
     SessionStorageTokenProvider
@@ -12,7 +12,7 @@ class DemoClient {
     }
 
     getList() {
-        return this.client.performRequest(requestFactory('get', '/list'));
+        return this.client.performRequest(createRequest('get', '/list'));
     }
 }
 
@@ -20,7 +20,7 @@ const mock = new window.AxiosMockAdapter(window.axios);
 mock.onGet('/list').reply(200, 'data');
 
 const client = new DemoClient(
-    clientFactory({
+    createClient({
         baseURL: 'https://demo.com',
         middleware: [
             new JWTAuthenticationMiddleware(
