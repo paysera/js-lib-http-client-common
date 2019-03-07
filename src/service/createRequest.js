@@ -13,7 +13,11 @@ export default (method, path, entity = null) => {
     let payload = null;
 
     if (entity !== null) {
-        payload = entity.getData();
+        if (typeof entity.getData === 'function') {
+            payload = entity.getData();
+        } else {
+            payload = entity;
+        }
     }
 
     if (lowerCaseMethod === 'get') {
