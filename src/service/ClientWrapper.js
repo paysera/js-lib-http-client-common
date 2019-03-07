@@ -13,7 +13,19 @@ export default class ClientWrapper {
      * @returns {Promise.<*>}
      */
     async performRequest(request, repeat = true) {
-        const response = await this.sendRequest(
+        const response = await this.performBaseRequest(request, repeat);
+
+        return response.data;
+    }
+
+    /**
+     * @param {Request} request
+     * @param {boolean} repeat
+     *
+     * @returns {Promise.<*>}
+     */
+    performBaseRequest(request, repeat = true) {
+        return this.sendRequest(
             {
                 method: request.method,
                 url: request.path,
@@ -22,8 +34,6 @@ export default class ClientWrapper {
             },
             repeat,
         );
-
-        return response.data;
     }
 
     /**

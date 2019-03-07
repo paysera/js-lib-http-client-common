@@ -20,27 +20,27 @@ Include files:
 
 #### Without any middleware
 ```js
-import { clientFactory, requestFactory } from '@paysera/http-client-common';
+import { createClient, createRequest } from '@paysera/http-client-common';
 
-const client = clientFactory({
+const client = createClient({
     baseURL: 'https://demo.com',
 });
 
-client.performRequest(requestFactory('get', '/list'));
+client.performRequest(createRequest('get', '/list'));
 ```
 
 #### With JWT authentication middleware(with session storage token provider)
 In this example `client.performRequest` makes request with `Authorization: 'Bearer {accessToken}'` header
 ```js
 import { 
-    clientFactory, 
-    requestFactory,
+    createClient, 
+    createRequest,
     JWTAuthenticationMiddleware,
     SessionStorageTokenProvider,
     Scope,
 } from '@paysera/http-client-common';
 
-const client = clientFactory({
+const client = createClient({
     baseURL: 'https://{shard_id}.demo.com/{locale}', // base url with parameters
     middleware: [
         new JWTAuthenticationMiddleware(
@@ -60,7 +60,7 @@ const client = clientFactory({
     }
 });
 
-client.performRequest(requestFactory('get', '/list'));
+client.performRequest(createRequest('get', '/list'));
 ```
 
 ## Write your own middleware
