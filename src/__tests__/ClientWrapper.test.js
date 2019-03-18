@@ -3,7 +3,6 @@ import createRequest from '../service/createRequest';
 import createClient from '../service/createClient';
 import { config, createClientWrapper } from './__utils__/factory';
 import axiosNockMock from './__utils__/axios-nock-mock';
-import { AuthenticationError } from '../error';
 
 axiosNockMock();
 
@@ -84,5 +83,34 @@ describe('ClientWrapper', () => {
                 },
             });
         }).toThrow();
+    });
+
+    test('Promises have cancellationTokenSource', async () => {
+        const clientWrapper = createClientWrapper();
+        nock(config.HOST)
+            .get('/list')
+            .reply(204);
+
+        const promiseFromBaseRequest = clientWrapper.performBaseRequest(createRequest('get', '/list'));
+        expect(promiseFromBaseRequest).toHaveProperty('cancellationTokenSource');
+
+        const promiseFromRequest = clientWrapper.performRequest(createRequest('get', '/list'));
+        expect(promiseFromRequest).toHaveProperty('cancellationTokenSource');
+    });
+
+    test('CancellationTokenSource cancels pending promise', () => {
+        const clientWrapper = createClientWrapper();
+        const requestMock = nock(config.HOST)
+            .get('/list')
+            .reply(204);
+        const error = {
+            message: 'Manually cancelled',
+        };
+
+        const promise = clientWrapper.performRequest(createRequest('get', '/list'));
+        promise.cancellationTokenSource.cancel(error.message);
+
+        expect(requestMock.isDone()).toBe(false);
+        return expect(promise).rejects.toMatchObject(error);
     });
 });

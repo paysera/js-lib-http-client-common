@@ -5,6 +5,6 @@ module.exports = {
     setupFiles: ['jest-localstorage-mock'],
     testRegex: '(/__tests__/.*\\.test)\\.jsx?$',
     transformIgnorePatterns: [
-        '<rootDir>/node_modules/(?!lodash-es)'
-    ]
+        '<rootDir>/node_modules/(?!lodash-es)',
+    ],
 };

@@ -1,3 +1,5 @@
+import { CancelToken } from 'axios';
+
 export default class ClientWrapper {
     /**
      * @param {axios} client
@@ -12,10 +14,13 @@ export default class ClientWrapper {
      *
      * @returns {Promise.<*>}
      */
-    async performRequest(request, repeat = true) {
-        const response = await this.performBaseRequest(request, repeat);
+    performRequest(request, repeat = true) {
+        const requestPromise = this.performBaseRequest(request, repeat);
+        const dataPromise = requestPromise.then(response => response.data);
 
-        return response.data;
+        dataPromise.cancellationTokenSource = requestPromise.cancellationTokenSource;
+
+        return dataPromise;
     }
 
     /**
@@ -25,15 +30,21 @@ export default class ClientWrapper {
      * @returns {Promise.<*>}
      */
     performBaseRequest(request, repeat = true) {
-        return this.sendRequest(
+        const source = CancelToken.source();
+        const requestPromise = this.sendRequest(
             {
                 method: request.method,
                 url: request.path,
                 data: request.body,
                 params: request.parameters,
+                cancelToken: source.token,
             },
             repeat,
         );
+
+        requestPromise.cancellationTokenSource = source;
+
+        return requestPromise;
     }
 
     /**

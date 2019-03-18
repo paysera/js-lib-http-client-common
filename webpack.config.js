@@ -5,7 +5,7 @@ module.exports = (env, argv) => {
         output: {
             libraryTarget: 'umd',
             library: 'PayseraHttpClientCommon',
-            globalObject: "typeof self !== 'undefined' ? self : this"
+            globalObject: "typeof self !== 'undefined' ? self : this",
         },
         module: {
             rules: [
@@ -14,10 +14,10 @@ module.exports = (env, argv) => {
                     exclude: /node_modules/,
                     use: [
                         {
-                            loader: 'babel-loader'
+                            loader: 'babel-loader',
                         },
                     ],
-                }
+                },
             ],
         },
         devtool: 'source-map',
@@ -25,8 +25,8 @@ module.exports = (env, argv) => {
         target: 'web',
         externals: {
             axios: 'axios',
-            store: 'store'
-        }
+            store: 'store',
+        },
     };
 
     if (argv.mode === 'development') {
@@ -36,7 +36,7 @@ module.exports = (env, argv) => {
                 path.join(__dirname, 'node_modules'),
             ],
             watchContentBase: true,
-            port: 9000
+            port: 9000,
         };
     }
 

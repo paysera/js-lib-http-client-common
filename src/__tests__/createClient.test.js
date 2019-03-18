@@ -11,7 +11,7 @@ beforeEach(() => {
     nock.cleanAll();
 });
 
-describe('clientFactory', () => {
+describe('createClient', () => {
     test('test X-Requested-With header', async () => {
         const client = createClient();
 
@@ -23,6 +23,22 @@ describe('clientFactory', () => {
             'get',
             '/list',
         ));
+
+        expect(requestMock.isDone()).toBe(true);
+    });
+
+    test('does not follows redirects', async () => {
+        const client = createClient();
+
+        const requestMock = nock(config.HOST)
+            .get('/list')
+            .reply(301, null, { Location: `${config.HOST}/something` });
+
+        try {
+            await client.performRequest(createRequest('get', '/list'));
+        } catch (error) {
+            expect(error.message).toMatch('Request failed with status code 301');
+        }
 
         expect(requestMock.isDone()).toBe(true);
     });

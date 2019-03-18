@@ -39,7 +39,7 @@ describe('useRequestMiddleware', () => {
     });
 });
 
-describe('useResponseMiddleware', async () => {
+describe('useResponseMiddleware', () => {
     test('modifies response data', async () => {
         nock('https://demo.dev')
             .get('/list')

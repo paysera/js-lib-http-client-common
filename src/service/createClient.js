@@ -14,6 +14,7 @@ export default ({
     });
 
     instance.defaults.headers.common['X-Requested-With'] = 'XMLHttpRequest';
+    instance.defaults.maxRedirects = 0;
 
     if (middleware !== null) {
         useMiddlewareList(instance, middleware);

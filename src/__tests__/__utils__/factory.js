@@ -1,4 +1,4 @@
-import axios from 'axios/index';
+import axios from 'axios';
 import SessionStorageTokenProvider from '../../service/authentication/tokenProvider/SessionStorageTokenProvider';
 import Scope from '../../entity/Scope';
 import createClientMethod from '../../service/createClient';
