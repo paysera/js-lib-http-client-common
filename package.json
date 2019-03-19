@@ -29,6 +29,12 @@
     "babel-runtime": "^6.26.0",
     "store": "^2.0.12"
   },
+  "files": [
+    "package.json",
+    "CHANGELOG.md",
+    "dist",
+    "src"
+  ],
   "devDependencies": {
     "@paysera/eslint-config": "0.0.1",
     "axios-mock-adapter": "^1.15.0",
