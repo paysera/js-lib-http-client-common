@@ -1,5 +1,6 @@
 export { default as Entity } from './entity/Entity';
 export { default as Filter } from './entity/Filter';
+export { default as File } from './entity/File';
 export { default as Request } from './entity/Request';
 export { default as Result } from './entity/Result';
 export { default as Scope } from './entity/Scope';
