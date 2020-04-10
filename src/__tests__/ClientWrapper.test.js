@@ -11,6 +11,29 @@ beforeEach(() => {
 });
 
 describe('ClientWrapper', () => {
+    test.each([
+        ['performRequest', clientWrapper => clientWrapper.performRequest.bind(clientWrapper)],
+        ['performBaseRequest', clientWrapper => clientWrapper.performBaseRequest.bind(clientWrapper)],
+    ])(
+        'returned value of `%s` has `cancellationTokenSource` property',
+        (title, makeRequest) => {
+            const clientWrapper = createClientWrapper();
+
+            nock(config.HOST)
+                .get('/list')
+                .reply(200, 'data');
+
+            const response = makeRequest(clientWrapper)(createRequest(
+                'get',
+                '/list',
+            ));
+
+            expect(response).toHaveProperty('cancellationTokenSource');
+
+            return response;
+        },
+    );
+
     test('makes request and return response', async () => {
         const clientWrapper = createClientWrapper();
 
