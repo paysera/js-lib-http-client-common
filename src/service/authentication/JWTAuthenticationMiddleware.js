@@ -35,13 +35,16 @@ export default class JWTAuthenticationMiddleware {
             && typeof error.response === 'object'
             && AUTH_HTTP_CODES.indexOf(error.response.status) !== -1
         ) {
-            const resendConfig = { ...error.config };
-            if (resendConfig.jwtAuthenticationConfig.retryCount < 1) {
-                resendConfig.jwtAuthenticationConfig.retryCount += 1;
-
+            const { config: { jwtAuthenticationConfig } } = error;
+            if (jwtAuthenticationConfig.retryCount < 1) {
                 await this.tokenProvider.refreshToken(this.scope);
 
-                return error.config.resendRequest(resendConfig);
+                return error.config.resendRequest({
+                    jwtAuthenticationConfig: {
+                        ...jwtAuthenticationConfig,
+                        retryCount: jwtAuthenticationConfig.retryCount + 1,
+                    },
+                });
             }
         }
 

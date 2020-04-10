@@ -14,8 +14,8 @@ export default class ClientWrapper {
      *
      * @returns {Promise.<*>}
      */
-    performRequest(request, repeat = true) {
-        const requestPromise = this.performBaseRequest(request, repeat);
+    performRequest(request) {
+        const requestPromise = this.performBaseRequest(request);
         const dataPromise = requestPromise.then(response => response.data);
 
         dataPromise.cancellationTokenSource = requestPromise.cancellationTokenSource;
@@ -29,22 +29,13 @@ export default class ClientWrapper {
      *
      * @returns {Promise.<*>}
      */
-    performBaseRequest(request, repeat = true) {
-        const source = CancelToken.source();
-        const requestPromise = this.sendRequest(
-            {
-                method: request.method,
-                url: request.path,
-                data: request.body,
-                params: request.parameters,
-                cancelToken: source.token,
-            },
-            repeat,
-        );
-
-        requestPromise.cancellationTokenSource = source;
-
-        return requestPromise;
+    performBaseRequest(request) {
+        return this.sendRequest({
+            method: request.method,
+            url: request.path,
+            data: request.body,
+            params: request.parameters,
+        });
     }
 
     /**
@@ -53,10 +44,16 @@ export default class ClientWrapper {
      * @returns {Promise.<*>}
      */
     sendRequest(config) {
-        return this.client({
-            ...config,
+        const source = CancelToken.source();
 
+        const response = this.client({
+            ...config,
+            cancelToken: source.token,
             resendRequest: (resendConfig = {}) => this.sendRequest({ ...config, ...resendConfig }),
         });
+
+        response.cancellationTokenSource = source;
+
+        return response;
     }
 }
