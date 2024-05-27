@@ -1,3 +1,4 @@
+const CopyPlugin = require('copy-webpack-plugin');
 const path = require('path');
 
 module.exports = (env, argv) => {
@@ -28,6 +29,14 @@ module.exports = (env, argv) => {
             store: 'store',
         },
     };
+
+    if (argv.mode === 'production') {
+        config.plugins = [
+            new CopyPlugin([
+                { from: path.resolve(__dirname, 'src', 'types'), to: path.resolve(__dirname, 'dist', 'types') },
+            ]),
+        ];
+    }
 
     if (argv.mode === 'development') {
         config.devServer = {
