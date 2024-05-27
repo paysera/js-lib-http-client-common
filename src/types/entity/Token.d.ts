@@ -4,6 +4,7 @@ declare class Token {
     constructor(scope: Scope, token: string);
 
     getScope(): Scope;
+
     getTokenValue(): string;
 }
 

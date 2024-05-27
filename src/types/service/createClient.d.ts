@@ -1,8 +1,8 @@
 import ClientWrapper from './ClientWrapper';
 
 declare function _default({ baseURL, middleware, options, }: {
-    baseURL?: null | undefined;
-    middleware?: null | undefined;
+    baseURL?: string | null | undefined;
+    middleware?: any[] | null | undefined;
     options?: {} | undefined;
 }): ClientWrapper;
 
